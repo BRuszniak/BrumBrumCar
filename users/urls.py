@@ -1,7 +1,9 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from . import views
 
+app_name = 'users'
+
 urlpatterns = [
-    url(r'^$', views.users, name='users'),
+    url(r'^$', views.index, name='index'),
     url(r'^register$', views.register, name='register'),
 ]

@@ -9,7 +9,7 @@ def index(request):
 
 def userRegister(request):
 
-    form = UserForm(request.POST or None)
+    form = UserForm_Register(request.POST or None)
 
     if request.method == 'POST':
         if form.is_valid():

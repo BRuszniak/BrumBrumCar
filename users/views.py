@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from users.forms import *
 
@@ -21,7 +22,7 @@ def userRegister(request):
 
             return HttpResponse("<h1>registration successful</h1>")
     else:
-        return render(request, 'users/register.html', {"form": form,})
+        return render(request, 'users/register.html', {"form": form, })
 
 
 def userLogin(request):
@@ -41,8 +42,22 @@ def userLogin(request):
         else:
             return HttpResponse("<h1>login error</h1>")
     else:
-        return render(request, 'users/login.html', {'form':form,})
+        return render(request, 'users/login.html', {'form': form, })
 
 def userLogout(request):
     logout(request)
     return HttpResponse("<h1>logged out</h1>")
+
+#@login_required(login_url = '/users/login/')
+def userFillProfileInfo(request):
+
+    if request.method == 'POST':
+        profileInfoForm = UserForm_Profile(request.POST, instance=request.user)
+        if profileInfoForm.is_valid():
+            profileInfoForm.save()
+            return HttpResponse("<h1>Profile Updated</h1>")
+        else:
+            return HttpResponse("<h1>profileInfoForm is not valid</h1>")
+    else:
+        profileInfoForm = UserForm_Profile(instance=request.user)
+        return render(request, 'users/fill-profile-info.html', {'profileInfoForm': profileInfoForm, })

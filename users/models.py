@@ -11,9 +11,9 @@ class UserProfile(models.Model):
     car =  models.CharField(max_length=30, blank=True, default='')
     bio = models.TextField(blank=True, default='')
 
-def create_profile(sender, **kwargs):
+def create_user_profile(sender, **kwargs):
     user = kwargs["instance"]
     if kwargs["created"]:
         user_profile = UserProfile(user=user)
         user_profile.save()
-post_save.connect(create_profile, sender=User)
+post_save.connect(create_user_profile, sender=User)

@@ -1,0 +1,5 @@
+<form action="fill-profile-info" method="post">
+    {% csrf_token %}
+    {{ profileInfoForm }}
+    <input type="submit" value="Submit" />
+</form>

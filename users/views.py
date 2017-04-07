@@ -62,3 +62,8 @@ def userFillProfileInfo(request):
     else:
         profileInfoForm = UserForm_Profile(instance=request.user.userprofile)
         return render(request, 'users/fill-profile-info.html', {'profileInfoForm': profileInfoForm, })
+
+
+def showUserProfile(request):
+    form = {'user': request.user}
+    return render(request, 'users/user-profile.html', form)

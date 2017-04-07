@@ -4,12 +4,13 @@ from django.db.models.signals import post_save
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name='user')
+    user = models.OneToOneField(User, related_name='userprofile')
     first_name = models.CharField(max_length=30, blank=True, default='')
     last_name = models.CharField(max_length=30, blank=True, default='')
     phone = models.CharField(max_length=30, blank=True, default='')
-    car =  models.CharField(max_length=30, blank=True, default='')
+    car = models.CharField(max_length=30, blank=True, default='')
     bio = models.TextField(blank=True, default='')
+
 
 def create_user_profile(sender, **kwargs):
     user = kwargs["instance"]

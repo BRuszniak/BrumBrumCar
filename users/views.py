@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
+import string
 from users.forms import *
 
 def index(request):
@@ -35,7 +35,7 @@ def userLogin(request):
         user = authenticate(username = username, password = password)
         if user is not None:
             if user.is_active:
-                login(request,user)
+                login(request, user)
                 return HttpResponse("<h1>login success</h1>")
             else:
                 return HttpResponse("<h1>login blocked</h1>")
@@ -52,12 +52,13 @@ def userLogout(request):
 def userFillProfileInfo(request):
 
     if request.method == 'POST':
-        profileInfoForm = UserForm_Profile(request.POST, instance=request.user)
+        profileInfoForm = UserForm_Profile(request.POST, instance=request.user.userprofile)
+
         if profileInfoForm.is_valid():
             profileInfoForm.save()
             return HttpResponse("<h1>Profile Updated</h1>")
         else:
             return HttpResponse("<h1>profileInfoForm is not valid</h1>")
     else:
-        profileInfoForm = UserForm_Profile(instance=request.user)
+        profileInfoForm = UserForm_Profile(instance=request.user.userprofile)
         return render(request, 'users/fill-profile-info.html', {'profileInfoForm': profileInfoForm, })

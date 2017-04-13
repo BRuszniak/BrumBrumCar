@@ -18,3 +18,15 @@ def create_user_profile(sender, **kwargs):
         user_profile = UserProfile(user=user)
         user_profile.save()
 post_save.connect(create_user_profile, sender=User)
+
+
+class TravelObject(models.Model):
+    start_point = models.CharField(max_length=30, blank=True, default='')
+    end_point = models.CharField(max_length=30, blank=True, default='')
+    luggage_size = models.CharField(max_length=30, blank=True, default='')
+    price = models.CharField(max_length=30, blank=True, default='')
+    about = models.TextField(blank=True, default='')
+    number_of_passengers = models.IntegerField()
+    travel_time = models.FloatField()
+    host = models.OneToOneField(User, related_name='travelhost')
+    passengers = models.ForeignKey(User, on_delete=models.CASCADE, related_name='travelpassenger')

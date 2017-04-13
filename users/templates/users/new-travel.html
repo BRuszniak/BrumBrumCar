@@ -1,0 +1,5 @@
+<form action="new-travel" method="post">
+    {% csrf_token %}
+    {{ travelform }}
+    <input type="submit" value="Submit" />
+</form>

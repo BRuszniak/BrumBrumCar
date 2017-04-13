@@ -72,3 +72,26 @@ def userFillProfileInfo(request):
 def showUserProfile(request):
     form = {'user': request.user}
     return render(request, 'users/user-profile.html', form)
+
+
+#@login_required(login_url = '/users/login/')
+def createTravelObject(request):
+    travelform = TravelForm(request.POST or None)
+
+    if request.method == 'POST':
+        if travelform.is_valid():
+            travel_object = travelform.save(commit=False)
+            travel_object.host = request.user
+            travel_object.save()
+
+            return HttpResponse("<h1>Travel form created</h1>")
+        else:
+            return HttpResponse("<h1>Travel form is not valid</h1>")
+    else:
+        return render(request, 'users/new-travel.html', {"travelform": travelform, })
+
+
+#@login_required(login_url = '/users/login/')
+def showTravelObject(request):
+    form = {'user': request.user}
+    return render(request, 'users/travel.html', form)

@@ -5,12 +5,14 @@ from django.contrib.auth.decorators import login_required
 import string
 from users.forms import *
 
+
 def index(request):
     return HttpResponse("<h1>users</h1>")
 
+
 def userRegister(request):
 
-    form = UserForm_Register(request.POST or None)
+    form = UserFormRegister(request.POST or None)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -27,12 +29,12 @@ def userRegister(request):
 
 def userLogin(request):
 
-    form = UserForm_Login(request.POST or None)
+    form = UserFormLogin(request.POST or None)
 
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(username = username, password = password)
+        user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -44,15 +46,17 @@ def userLogin(request):
     else:
         return render(request, 'users/login.html', {'form': form, })
 
+
 def userLogout(request):
     logout(request)
     return HttpResponse("<h1>logged out</h1>")
+
 
 #@login_required(login_url = '/users/login/')
 def userFillProfileInfo(request):
 
     if request.method == 'POST':
-        profileInfoForm = UserForm_Profile(request.POST, instance=request.user.userprofile)
+        profileInfoForm = UserFormProfile(request.POST, instance=request.user.userprofile)
 
         if profileInfoForm.is_valid():
             profileInfoForm.save()
@@ -60,10 +64,11 @@ def userFillProfileInfo(request):
         else:
             return HttpResponse("<h1>profileInfoForm is not valid</h1>")
     else:
-        profileInfoForm = UserForm_Profile(instance=request.user.userprofile)
+        profileInfoForm = UserFormProfile(instance=request.user.userprofile)
         return render(request, 'users/fill-profile-info.html', {'profileInfoForm': profileInfoForm, })
 
 
+#@login_required(login_url = '/users/login/')
 def showUserProfile(request):
     form = {'user': request.user}
     return render(request, 'users/user-profile.html', form)

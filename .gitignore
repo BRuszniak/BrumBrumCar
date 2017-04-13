@@ -15,3 +15,4 @@ build/
 tests/report/
 *.pyc
 *.sqlite3
+users/migrations/

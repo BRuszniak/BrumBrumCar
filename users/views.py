@@ -41,18 +41,18 @@ def userLogin(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponse("<h1>login success</h1>")
+                return redirect('/users/home')
             else:
-                return HttpResponse("<h1>login blocked</h1>")
+                return redirect('/users/login')
         else:
-            return HttpResponse("<h1>login error</h1>")
+            return redirect('/users/login')
     else:
         return render(request, 'users/login.html', {'form': form, })
 
 
 def userLogout(request):
     logout(request)
-    return HttpResponse("<h1>logged out</h1>")
+    return redirect('/users/home')
 
 
 def showAllTravels(request):

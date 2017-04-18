@@ -9,6 +9,9 @@ from users.forms import *
 def index(request):
     return HttpResponse("<h1>users</h1>")
 
+def home(request):
+    return render(request, 'users/home.html')
+
 
 def userRegister(request):
 

@@ -1,0 +1,23 @@
+.intro_section {
+    background: white url("../users/images/homeimage.jpeg");
+    height: 70vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-position: center center;
+    background-size: cover;
+    position: relative;
+    display: flex;
+}
+
+.intro_text {
+    text-align: center;
+    color: black;
+    margin: auto;
+}
+
+.intro_section__text-button {
+    position: absolute;
+    bottom: -28px;
+    transform: translateX(-50%);
+}

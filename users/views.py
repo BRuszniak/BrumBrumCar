@@ -55,6 +55,14 @@ def userLogout(request):
     return HttpResponse("<h1>logged out</h1>")
 
 
+def showAllTravels(request):
+    all_travels = TravelObject.objects.all()
+    contex = {
+        'all_travels': all_travels
+    }
+    return render(request, 'users/travels.html', contex)
+
+
 #@login_required(login_url = '/users/login/')
 def userFillProfileInfo(request):
 
@@ -91,10 +99,10 @@ def createTravelObject(request):
         else:
             return HttpResponse("<h1>Travel form is not valid</h1>")
     else:
-        return render(request, 'users/new-travel.html', {"travelform": travelform, })
+        return render(request, "users/new-travel.html", {"travelform": travelform, })
 
 
 #@login_required(login_url = '/users/login/')
-def showTravelObject(request):
+def showUserTravels(request):
     form = {'user': request.user}
-    return render(request, 'users/travel.html', form)
+    return render(request, 'users/user-travels.html', form)

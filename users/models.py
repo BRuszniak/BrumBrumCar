@@ -28,5 +28,5 @@ class TravelObject(models.Model):
     about = models.TextField(blank=True, default='')
     seats_left = models.IntegerField()
     travel_time = models.FloatField()
-    host = models.OneToOneField(User, null=True, related_name='travelhost')
+    host = models.ForeignKey(User, null=True, related_name='travelhost')
     passengers = models.ForeignKey(User, null=True, related_name='travelpassenger')

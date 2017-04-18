@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^user-profile$', views.showUserProfile, name='user-profile'),
     url(r'^user-profile/fill-profile-info$', views.userFillProfileInfo, name='fill-user-profile'),
     url(r'^new-travel$', views.createTravelObject, name='new-travel'),
-    url(r'^travel$', views.showTravelObject, name='travel')
+    url(r'^user-travels$', views.showUserTravels, name='user-travels'),
+    url(r'^travels$', views.showAllTravels, name='travels'),
 ]

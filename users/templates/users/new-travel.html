@@ -1,5 +1,11 @@
+{% extends 'users/base.html'%}
+
+{% block body %}
+
 <form action="new-travel" method="post">
     {% csrf_token %}
     {{ travelform }}
     <input type="submit" value="Submit" />
 </form>
+
+{% endblock %}

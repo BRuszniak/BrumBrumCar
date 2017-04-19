@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 import string
@@ -55,14 +55,6 @@ def userLogout(request):
     return redirect('/users/home')
 
 
-def showAllTravels(request):
-    all_travels = TravelObject.objects.all()
-    contex = {
-        'all_travels': all_travels
-    }
-    return render(request, 'users/travels.html', contex)
-
-
 #@login_required(login_url = '/users/login/')
 def userFillProfileInfo(request):
 
@@ -104,5 +96,27 @@ def createTravelObject(request):
 
 #@login_required(login_url = '/users/login/')
 def showUserTravels(request):
-    form = {'user': request.user}
-    return render(request, 'users/user-travels.html', form)
+    travels_hosted = TravelObject.objects.filter(host=request.user)
+    travels_passenger = TravelObject.objects.filter(passengers=request.user)
+    contex = {
+        'travels_hosted': travels_hosted,
+        'user': request.user,
+        'travels_passenger': travels_passenger
+    }
+    return render(request, 'users/user-travels.html', contex)
+
+
+def showAllTravels(request):
+    all_travels = TravelObject.objects.all()
+    contex = {
+        'all_travels': all_travels
+    }
+    return render(request, 'users/travels.html', contex)
+
+
+def showTravelDetails(request, travel_id):
+    try:
+        travel = TravelObject.objects.get(pk=travel_id)
+    except TravelObject.DoesNotExist:
+        raise Http404("Travel does not exist")
+    return render(request, 'users/travel-details.html', {'travel': travel})

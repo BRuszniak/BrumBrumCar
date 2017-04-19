@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load staticfiles %}
     <meta charset="UTF-8">
     <title>BrumBrumSamochodzik</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -8,6 +9,7 @@
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-indigo.min.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'users/style_base.css '%}" />
 
 </head>
 <body>
@@ -34,14 +36,23 @@
             </div>
         </header>
 
+        {% if user.is_authenticated %}
         <div class="mdl-layout__drawer">
-            <span class="mdl-layout__title">Hello World</span>
-            <nav class="mdl-navigation">
-              <a class="mdl-navigation__link" href="#">Nav link 1</a>
-              <a class="mdl-navigation__link" href="#">Nav link 2</a>
-              <a class="mdl-navigation__link" href="#">Nav link 3</a>
-            </nav>
+            <span class="mdl-layout__title">Hello {{user}}</span>
+            <div class="avatar">
+                <img src="https://c1.staticflickr.com/3/2040/2383415732_698e8f93cf.jpg" class="avatar-img">
+            </div>
+
+            <div class="drawer-text">
+                <p>Username: {{user}}</p>
+                <p>First name: {{user.userprofile.first_name}}</p>
+                <p>Last name: {{user.userprofile.last_name}}</p>
+                <p>Phone number: {{user.userprofile.phone}}</p>
+                <p>Car model: {{user.userprofile.car}}</p>
+                <p>About me: {{user.userprofile.bio}}</p>
+            </div>
         </div>
+        {% endif %}
 
         {% block photo %}
         {% endblock %}

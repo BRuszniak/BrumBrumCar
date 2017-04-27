@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 import string
 from users.forms import *
+from users.models import *
 
 
 def index(request):
@@ -97,7 +98,8 @@ def createTravelObject(request):
 #@login_required(login_url = '/users/login/')
 def showUserTravels(request):
     travels_hosted = TravelObject.objects.filter(host=request.user)
-    travels_passenger = TravelObject.objects.filter(passengers=request.user)
+    travels_passenger = request.user.travelpassenger.all()
+
     contex = {
         'travels_hosted': travels_hosted,
         'user': request.user,
@@ -114,9 +116,37 @@ def showAllTravels(request):
     return render(request, 'users/travels.html', contex)
 
 
+#@login_required(login_url = '/users/login/')
 def showTravelDetails(request, travel_id):
+
     try:
         travel = TravelObject.objects.get(pk=travel_id)
     except TravelObject.DoesNotExist:
         raise Http404("Travel does not exist")
-    return render(request, 'users/travel-details.html', {'travel': travel})
+
+    is_signed = request.user.travelpassenger.filter(id=travel_id).exists()
+
+    contex = {
+        'travel': travel,
+        'is_signed': is_signed
+    }
+
+    return render(request, 'users/travel-details.html', contex)
+
+
+#@login_required(login_url = '/users/login/')
+def save_passenger(request, travel_id):
+
+    try:
+        travel = TravelObject.objects.get(pk=travel_id)
+    except TravelObject.DoesNotExist:
+        raise Http404("Travel does not exist")
+
+    if travel.seats_left - 1 >= 0:
+        travel.passengers.add(request.user)
+        travel.seats_left -= 1
+        travel.save()
+    else:
+        return Http404("No available seats")
+
+    return redirect('/users/travels/'+travel_id)

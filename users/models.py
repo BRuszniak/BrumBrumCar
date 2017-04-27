@@ -29,4 +29,7 @@ class TravelObject(models.Model):
     seats_left = models.IntegerField()
     travel_time = models.FloatField()
     host = models.ForeignKey(User, null=True, related_name='travelhost')
-    passengers = models.ForeignKey(User, null=True, related_name='travelpassenger')
+    passengers = models.ManyToManyField(User, related_name='travelpassenger')
+
+    def __str__(self):
+        return 'Travel object of user : ' + self.host.username

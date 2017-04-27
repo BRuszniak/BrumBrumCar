@@ -109,9 +109,16 @@ def showUserTravels(request):
 
 
 def showAllTravels(request):
-    all_travels = TravelObject.objects.all()
+
+    travel_search = request.GET.get("search")
+
+    if travel_search:
+        travels_list = TravelObject.objects.filter(start_point=travel_search)
+    else:
+        travels_list = TravelObject.objects.all()
+
     contex = {
-        'all_travels': all_travels
+        'travels_list': travels_list
     }
     return render(request, 'users/travels.html', contex)
 

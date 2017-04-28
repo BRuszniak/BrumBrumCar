@@ -12,9 +12,14 @@
 {{ travel.passengers.username }}
 {{ user.username }}
 
-{% if not is_signed and user.username != travel.host.username and travel.seats_left > 0%}
+{% if not is_signed and user.username != travel.host.username and travel.seats_left > 0 %}
     <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="save_passenger/">
-        Save
+        Sign up
     </a>
-{%endif%}
+{% else %}
+    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="remove_passenger/">
+        Leave
+    </a>
+{% endif %}
+
 {% endblock %}

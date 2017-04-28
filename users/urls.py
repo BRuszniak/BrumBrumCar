@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^travels$', views.showAllTravels, name='travels'),
     url(r'^travels/(?P<travel_id>[0-9]+)/$', views.showTravelDetails, name='travel-details'),
     url(r'^travels/(?P<travel_id>[0-9]+)/save_passenger/$', views.save_passenger, name='save_passenger'),
+    url(r'^travels/(?P<travel_id>[0-9]+)/remove_passenger/$', views.remove_passenger, name='remove_passenger'),
 ]

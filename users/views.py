@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import string
 from users.forms import *
@@ -110,10 +111,14 @@ def showUserTravels(request):
 
 def showAllTravels(request):
 
-    travel_search = request.GET.get("search")
+    search_start = request.GET.get("search_start")
+    search_end = request.GET.get("search_end")
 
-    if travel_search:
-        travels_list = TravelObject.objects.filter(start_point=travel_search)
+    if search_start and search_end:
+        travels_list = TravelObject.objects.filter(
+            Q(start_point=search_start),
+            Q(end_point=search_end)
+        ).distinct()
     else:
         travels_list = TravelObject.objects.all()
 
@@ -155,5 +160,20 @@ def save_passenger(request, travel_id):
         travel.save()
     else:
         return Http404("No available seats")
+
+    return redirect('/users/travels/'+travel_id)
+
+
+#@login_required(login_url = '/users/login/')
+def remove_passenger(request, travel_id):
+
+    try:
+        travel = TravelObject.objects.get(pk=travel_id)
+    except TravelObject.DoesNotExist:
+        raise Http404("Travel does not exist")
+
+    travel.passengers.remove(request.user)
+    travel.seats_left += 1
+    travel.save()
 
     return redirect('/users/travels/'+travel_id)

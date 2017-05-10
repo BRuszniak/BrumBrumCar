@@ -24,7 +24,15 @@ def userRegister(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
 
-            return HttpResponse("<h1>registration successful</h1>")
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+
+            if user.is_active:
+                login(request, user)
+                return redirect('/users/home')
+            else:
+                return redirect('/users/login')
     else:
         return render(request, 'users/register.html', {"form": form, })
 

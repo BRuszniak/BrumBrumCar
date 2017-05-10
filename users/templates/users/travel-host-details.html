@@ -1,0 +1,21 @@
+{% extends 'users/base.html'%}
+
+{% block body %}
+
+{{ travel.start_point }}
+{{ travel.end_point }}
+{{ travel.luggage_size }}
+{{ travel.price }}
+{{ travel.seats_left }}
+{{ travel.travel_time }}
+{{ travel.about }}
+{{ user.username }}
+
+{% for user in travel.passengers.all %}
+    {{ user.username }}
+    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="remove_passenger/{{ user.username }}">
+        Remove user
+    </a>
+{% endfor %}
+
+{% endblock %}

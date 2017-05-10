@@ -2,10 +2,17 @@
 
 {% block body %}
 
-<form action="new-travel" method="post">
-    {% csrf_token %}
-    {{ travelform }}
-    <input type="submit" value="Submit" />
-</form>
+{% if request.method == 'POST' %}
+    <p>Your travel was successfully created </p>
+    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="new-travel">
+        Create next travel
+    </a>
+{% else %}
+    <form action="new-travel" method="post">
+        {% csrf_token %}
+        {{ travelform }}
+        <input type="submit" value="Submit" />
+    </form>
+{% endif %}
 
 {% endblock %}

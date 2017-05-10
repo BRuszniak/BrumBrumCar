@@ -8,9 +8,6 @@ from users.forms import *
 from users.models import *
 
 
-def index(request):
-    return HttpResponse("<h1>users</h1>")
-
 def home(request):
     return render(request, 'users/home.html')
 
@@ -89,7 +86,7 @@ def createTravelObject(request):
             travel_object.host = request.user
             travel_object.save()
 
-            return HttpResponse("<h1>Travel form created</h1>")
+            return render(request, "users/new-travel.html", {"travelform": travelform, })
         else:
             return HttpResponse("<h1>Travel form is not valid</h1>")
     else:

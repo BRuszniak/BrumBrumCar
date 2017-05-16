@@ -2,15 +2,21 @@
 
 {% block body %}
 
-{{ travel.start_point }}
-{{ travel.end_point }}
-{{ travel.luggage_size }}
-{{ travel.price }}
-{{ travel.seats_left }}
-{{ travel.travel_time }}
-{{ travel.about }}
-{{ travel.passengers.username }}
-{{ user.username }}
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Trevel Details</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <p>Driver username: {{ user.username }}</p>
+        <p>Starting point: {{ travel.start_point }}</p>
+        <p>Destination: {{ travel.end_point }}</p>
+        <p>Luggage size per passenger: {{ travel.luggage_size }}</p>
+        <p>Price: {{ travel.price }}</p>
+        <p>Seats left: {{ travel.seats_left }}</p>
+        <p>Travel time: {{ travel.travel_time }}</p>
+        <p>About travel: {{ travel.about }}</p>
+    </div>
+</div>
 
 {% if not is_signed and user.username != travel.host.username and travel.seats_left > 0 %}
     <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="save_passenger/">
@@ -21,5 +27,19 @@
         Leave
     </a>
 {% endif %}
+
+{% for user in travel.passengers.all %}
+<ul class="demo-list-three mdl-list">
+    <li class="mdl-list__item mdl-list__item--three-line">
+        <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-avatar">person</i>
+            <span>{{ user.username }}</span>
+            <span class="mdl-list__item-text-body">
+                {{ user.bio }}
+            </span>
+        </span>
+    </li>
+</ul>
+{% endfor %}
 
 {% endblock %}

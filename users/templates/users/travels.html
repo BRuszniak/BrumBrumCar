@@ -18,13 +18,9 @@
                     <h2 class="mdl-card__title-text">{{ travel.start_point }}</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
-                        {{ travel.start_point }}
-                        {{ travel.end_point }}
-                        {{ travel.luggage_size }}
-                        {{ travel.price }}
-                        {{ travel.seats_left }}
-                        {{ travel.travel_time }}
-                        {{ travel.about }}
+                        <p>Starting point: {{ travel.start_point }}</p>
+                        <p>Destination: {{ travel.end_point }}</p>
+                        <p>Price: {{ travel.price }}</p>
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
                         <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/users/travels/{{ travel.id }}/">

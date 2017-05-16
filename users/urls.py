@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^travels/(?P<travel_id>[0-9]+)/save_passenger/$', views.save_passenger, name='save_passenger'),
     url(r'^travels/(?P<travel_id>[0-9]+)/leave_passenger/$', views.leave_passenger, name='leave_passenger'),
     url(r'^travels/(?P<travel_id>[0-9]+)/remove_passenger/(?P<username>[a-zA-Z0-9]+)$', views.remove_passenger, name='remove_passenger'),
+    url(r'^travels/(?P<travel_id>[0-9]+)/review-user/(?P<username>[a-zA-Z0-9]+)$', views.review_user, name='review_user'),
 ]

@@ -144,7 +144,7 @@ def showTravelDetails(request, travel_id):
     is_signed = request.user.travelpassenger.filter(id=travel_id).exists()
 
     if request.user == travel.host:
-        return render(request, 'users/travel-host-details.html', {'travel': travel, })
+        return render(request, 'users/travel-details.html', {'travel': travel, })
 
     contex = {
         'travel': travel,
@@ -206,3 +206,23 @@ def remove_passenger(request, travel_id, username):
         travel.save()
 
     return redirect('/users/travels/'+travel_id)
+
+
+#@login_required(login_url = '/users/login/')
+def review_user(request, travel_id, username):
+
+    form = ReviewUserForm(request.POST or None)
+
+    if request.method == 'POST':
+        try:
+            travel = TravelObject.objects.get(pk=travel_id)
+        except TravelObject.DoesNotExist:
+            raise Http404("Travel does not exist")
+
+        try:
+            us = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise Http404("Passenger does not exist")
+
+    else:
+        return render(request, 'users/review-user.html', {'form': form, })

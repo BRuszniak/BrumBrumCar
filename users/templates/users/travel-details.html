@@ -18,6 +18,7 @@
     </div>
 </div>
 
+{% if request.user != travel.host %}
 {% if not is_signed and user.username != travel.host.username and travel.seats_left > 0 %}
     <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="save_passenger/">
         Sign up
@@ -27,17 +28,25 @@
         Leave
     </a>
 {% endif %}
+{% endif %}
 
-{% for user in travel.passengers.all %}
+{% for passenger in travel.passengers.all %}
 <ul class="demo-list-three mdl-list">
     <li class="mdl-list__item mdl-list__item--three-line">
         <span class="mdl-list__item-primary-content">
             <i class="material-icons mdl-list__item-avatar">person</i>
-            <span>{{ user.username }}</span>
+            <span>{{ passenger.username }}</span>
             <span class="mdl-list__item-text-body">
-                {{ user.bio }}
+                {{ passenger.bio }}
             </span>
         </span>
+        {% if request.user == travel.host %}
+        <span>
+            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="remove_passenger/{{ user.username }}">
+                Remove user
+            </a>
+            </span>
+        {% endif %}
     </li>
 </ul>
 {% endfor %}

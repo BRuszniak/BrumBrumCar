@@ -1,5 +1,10 @@
+{% extends 'users/base.html'%}
+{% load staticfiles %}
+
+{% block photo %}
 <form action="fill-profile-info" method="post">
     {% csrf_token %}
     {{ profileInfoForm }}
     <input type="submit" value="Submit" />
 </form>
+{% endblock %}

@@ -1,54 +1,99 @@
 {% extends 'users/base.html'%}
+{% load staticfiles %}
 
 {% block body %}
+<link rel="stylesheet" type="text/css" href="{% static 'users/style_travel_details.css '%}" />
 
-<div class="demo-card-wide mdl-card mdl-shadow--2dp">
-    <div class="mdl-card__title">
-        <h2 class="mdl-card__title-text">Trevel Details</h2>
+<div class="mdl-grid">
+    <div class=" mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet">
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Trevel Details</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <p>Driver username: {{ travel.host.username }}</p>
+                <p>Starting point: {{ travel.start_point }}</p>
+                <p>Destination: {{ travel.end_point }}</p>
+                <p>Luggage size per passenger: {{ travel.luggage_size }}</p>
+                <p>Price: {{ travel.price }}</p>
+                <p>Seats left: {{ travel.seats_left }}</p>
+                <p>Travel time: {{ travel.travel_time }}</p>
+                <p>About travel: {{ travel.about }}</p>
+            </div>
+        </div>
     </div>
-    <div class="mdl-card__supporting-text">
-        <p>Driver username: {{ user.username }}</p>
-        <p>Starting point: {{ travel.start_point }}</p>
-        <p>Destination: {{ travel.end_point }}</p>
-        <p>Luggage size per passenger: {{ travel.luggage_size }}</p>
-        <p>Price: {{ travel.price }}</p>
-        <p>Seats left: {{ travel.seats_left }}</p>
-        <p>Travel time: {{ travel.travel_time }}</p>
-        <p>About travel: {{ travel.about }}</p>
+    {% if travel.travel_state == "IN_PROGRESS" %}
+        <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet ">
+            {% if is_signed or request.user == travel.host%}
+                <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+                    <div class="mdl-card__title">
+                        <h2 class="mdl-card__title-text">Review Travel Participants</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {{ reviewForm }}
+                            <input type="submit" value="Submit" name="reviewForm" />
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet ">
+        {% if request.user != travel.host and travel.travel_state == "" %}
+            {% if not is_signed and user.username != travel.host.username and travel.seats_left > 0 %}
+                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="save_passenger/">
+                    Sign up
+                </a>
+            {% else %}
+                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="leave_passenger/">
+                    Leave
+                </a>
+            {% endif %}
+        {% endif %}
+        {% if request.user == travel.host and travel.travel_state == "" %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  type="submit" name="start" value="Start Travel" />
+            </form>
+        {% else %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  type="submit" name="end" value="End Travel" />
+            </form>
+        {% endif %}
     </div>
 </div>
 
-{% if request.user != travel.host %}
-{% if not is_signed and user.username != travel.host.username and travel.seats_left > 0 %}
-    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="save_passenger/">
-        Sign up
-    </a>
-{% else %}
-    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="leave_passenger/">
-        Leave
-    </a>
-{% endif %}
-{% endif %}
-
-{% for passenger in travel.passengers.all %}
-<ul class="demo-list-three mdl-list">
-    <li class="mdl-list__item mdl-list__item--three-line">
-        <span class="mdl-list__item-primary-content">
-            <i class="material-icons mdl-list__item-avatar">person</i>
-            <span>{{ passenger.username }}</span>
-            <span class="mdl-list__item-text-body">
-                {{ passenger.bio }}
-            </span>
-        </span>
-        {% if request.user == travel.host %}
-        <span>
-            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="remove_passenger/{{ user.username }}">
-                Remove user
-            </a>
-            </span>
-        {% endif %}
-    </li>
-</ul>
-{% endfor %}
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet ">
+        {% for passenger in travel.passengers.all %}
+            <ul class="demo-list-three mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-avatar">person</i>
+                        <a href="/users/user-profile/{{passenger.username}}">{{ passenger.username }}</a>
+                        <span class="mdl-list__item-text-body">
+                            {{ passenger.bio }}
+                        </span>
+                    </span>
+                    {% if request.user == travel.host and travel.travel_state == ""%}
+                        <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet ">
+                            <span>
+                                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="remove_passenger/{{ passenger.username }}">
+                                    Remove user
+                                </a>
+                            </span>
+                        </div>
+                    {% endif %}
+                </li>
+            </ul>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}

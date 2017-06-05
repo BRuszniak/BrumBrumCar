@@ -78,9 +78,14 @@ def userFillProfileInfo(request):
         return render(request, 'users/fill-profile-info.html', {'profileInfoForm': profileInfoForm, })
 
 
-#@login_required(login_url = '/users/login/')
-def showUserProfile(request):
-    form = {'user': request.user}
+def showUserProfile(request, username):
+
+    usersReviewsList = ReviewUser.objects.filter(reviewed_user_username=username)
+    user = User.objects.get(username=username)
+
+    form = {'user': user,
+            'usersReviewsList': usersReviewsList}
+
     return render(request, 'users/user-profile.html', form)
 
 
@@ -142,16 +147,41 @@ def showTravelDetails(request, travel_id):
         raise Http404("Travel does not exist")
 
     is_signed = request.user.travelpassenger.filter(id=travel_id).exists()
+    reviewForm = ReviewUserForm(request.POST or None)
 
-    if request.user == travel.host:
-        return render(request, 'users/travel-details.html', {'travel': travel, })
+    if 'reviewForm' in request.POST:
+        reviewForm = ReviewUserForm(request.POST or None)
+        saveReview(reviewForm, request.user)
+    elif 'start' in request.POST:
+        travel.travel_state = "IN_PROGRESS"
+        travel.save()
+    elif 'end' in request.POST:
+        removeTravelObject(travel_id)
 
     contex = {
         'travel': travel,
-        'is_signed': is_signed
+        'is_signed': is_signed,
+        'reviewForm': reviewForm
     }
 
     return render(request, 'users/travel-details.html', contex)
+
+def removeTravelObject(travel_id):
+
+    travelToDelete = TravelObject.objects.get(pk=travel_id)
+    travelToDelete.delete()
+    return redirect('/users/')
+
+
+def saveReview(reviewForm, user):
+
+    if reviewForm.is_valid():
+        reviewObject = reviewForm.save(commit=False)
+        reviewObject.reviewer_username = user.username
+        reviewObject.save()
+    else:
+        return HttpResponse("<h1>reviewForm form is not valid</h1>")
+
 
 
 #@login_required(login_url = '/users/login/')
@@ -206,23 +236,3 @@ def remove_passenger(request, travel_id, username):
         travel.save()
 
     return redirect('/users/travels/'+travel_id)
-
-
-#@login_required(login_url = '/users/login/')
-def review_user(request, travel_id, username):
-
-    form = ReviewUserForm(request.POST or None)
-
-    if request.method == 'POST':
-        try:
-            travel = TravelObject.objects.get(pk=travel_id)
-        except TravelObject.DoesNotExist:
-            raise Http404("Travel does not exist")
-
-        try:
-            us = User.objects.get(username=username)
-        except User.DoesNotExist:
-            raise Http404("Passenger does not exist")
-
-    else:
-        return render(request, 'users/review-user.html', {'form': form, })

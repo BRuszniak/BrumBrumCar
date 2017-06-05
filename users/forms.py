@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
-from users.models import UserProfile, TravelObject
+from users.models import UserProfile, TravelObject, ReviewUser
 
 
 class UserFormRegister(forms.ModelForm):
@@ -31,3 +31,10 @@ class TravelForm(forms.ModelForm):
     class Meta:
         model = TravelObject
         fields = ['start_point', 'end_point', 'luggage_size', 'price', 'about', 'seats_left', 'travel_time']
+
+
+class ReviewUserForm(forms.ModelForm):
+
+    class Meta:
+        model = ReviewUser
+        fields = ['reviewed_user_username', 'body', 'rating']

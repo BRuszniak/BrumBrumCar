@@ -25,6 +25,7 @@ class TravelObject(models.Model):
     end_point = models.CharField(max_length=30, blank=True, default='')
     luggage_size = models.CharField(max_length=30, blank=True, default='')
     price = models.CharField(max_length=30, blank=True, default='')
+    travel_state = models.CharField(max_length=30, blank=True, default='')
     about = models.TextField(blank=True, default='')
     seats_left = models.IntegerField()
     travel_time = models.FloatField()
@@ -33,3 +34,10 @@ class TravelObject(models.Model):
 
     def __str__(self):
         return 'Travel object of user : ' + self.host.username
+
+
+class ReviewUser(models.Model):
+    reviewer_username = models.CharField(max_length=200)
+    reviewed_user_username = models.CharField(max_length=200)
+    body = models.TextField()
+    rating = models.IntegerField()
